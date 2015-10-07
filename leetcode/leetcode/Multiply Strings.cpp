@@ -17,7 +17,6 @@ public:
 		vector<int> f(n + m, 0);
 		vector<int> n1(n, 0);
 		vector<int> n2(m, 0);
-		int jinwei = 0;
 		for (int i = 0; i < n; ++i)
 		{
 			n1[i] = num1[n - i - 1] - '0';
