@@ -29,7 +29,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Length of Last Word.cpp">
+    <ClCompile Include="bbbb.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="D - String Arrangement.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
