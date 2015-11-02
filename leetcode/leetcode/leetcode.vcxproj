@@ -83,8 +83,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bbbb.cpp" />
-    <ClCompile Include="D - String Arrangement.cpp" />
+    <ClCompile Include="Largest Rectangle in Histogram.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

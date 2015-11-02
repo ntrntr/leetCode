@@ -29,10 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="bbbb.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="D - String Arrangement.cpp">
+    <ClCompile Include="Largest Rectangle in Histogram.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
