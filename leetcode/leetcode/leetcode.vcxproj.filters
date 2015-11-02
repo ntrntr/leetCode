@@ -29,7 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Largest Rectangle in Histogram.cpp">
+    <ClCompile Include="Populating Next Right Pointers in Each Node.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
