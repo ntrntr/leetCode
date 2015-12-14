@@ -32,9 +32,9 @@ int main()
 #pragma omp parallel for
 	for (int i = 0; i < 1000; ++i)
 	{
-		//test();
-		f[i] = g[i];
-		g[min(i+222, 1000-1)] = f[i];
+		test();
+		//f[i] = g[i];
+		//g[min(i+222, 1000-1)] = f[i];
 		//if (rand()%5 == 0)
 		//{
 		//	int tmp = rand() % 100000000;
