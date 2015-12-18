@@ -29,7 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Minimum Height Trees.cpp">
+    <ClCompile Include="Longest Increasing Subsequence.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
