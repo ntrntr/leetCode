@@ -29,10 +29,11 @@ int main()
 	//	cout<<i<<" ";
 	//}
 	begin = clock();
-#pragma omp parallel for
-	for (int i = 0; i < 1000; ++i)
+	RNG rng;
+//#pragma omp parallel for
+	for (int i = 0; i < 10; ++i)
 	{
-		test();
+		//test();
 		//f[i] = g[i];
 		//g[min(i+222, 1000-1)] = f[i];
 		//if (rand()%5 == 0)
@@ -40,6 +41,7 @@ int main()
 		//	int tmp = rand() % 100000000;
 		//	g[tmp] = f[i];
 		//}
+		cout << rng.uniform(0, 5) << endl;
 	}
 	clock_t end = clock();
 	cout<<"total time = "<<end - begin<<endl;
