@@ -29,10 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="All Roads Lead to Rome 2.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dij.cpp">
+    <ClCompile Include="Shortest Distance.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
