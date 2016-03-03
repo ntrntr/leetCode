@@ -62,5 +62,6 @@ int main()
 		}
 		cout << dist[b-1][c-1] << endl;
 	}
+	
 	return 0;
 }

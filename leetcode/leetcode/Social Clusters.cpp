@@ -46,6 +46,10 @@ struct myset
 //	}
 //	cout << "//////////////////////////////////////////////////////////////////////////_end" << endl;
 //}
+bool mycmp(const myset& a, const myset& b)
+{
+	return a.num > b.num;
+}
 int main()
 {
 	Solution s;
@@ -150,11 +154,15 @@ int main()
 
 	}
 
-	sort(f.begin(), f.end(), [](myset& a, myset& b)
-	{
-		return a.num > b.num;
-	});
+	//sort(f.begin(), f.end(), [](myset& a, myset& b){
+	//	return a.num > b.num;
+	//});
+	sort(f.begin(), f.end(), mycmp);
 	cout << f.size() << endl;
+	if (f.size() == 0)
+	{
+		return 0;
+	}
 	for (int i = 0; i < f.size(); ++i)
 	{
 		if (i == 0)
