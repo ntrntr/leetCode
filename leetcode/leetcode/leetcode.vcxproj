@@ -84,8 +84,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Phone Bills.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Table Tennis.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

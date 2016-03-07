@@ -64,11 +64,38 @@ bool cmp(record& a, record& b)
 		return a.mm < b.mm;
 	}
 }
+int check(int st, int n)
+{
+	bool flag = false, out = false;
+	if (st >= f.size())
+	{
+		return false;
+	}
+	string name = f[st].name;
+	for (int i = st; i < n; ++i)
+	{
+		if (name == f[i].name)
+		{
+			if (f[i].state == 0)
+			{
+				flag = true;
+			}
+			else if (f[i].state == 1 && flag)
+			{
+				flag = false;
+				out = true;
+			}
+		}
+		else
+			break;
+	}
+	return out;
+}
 double getMoney(int a1,int b1, int c1, int a2, int b2, int c2, int& time)
 {
 	time = 0;
 	double sum = 0;
-	time = (a2 - a1) * 24 * 60 + (b2 - b1) * 60 + (c2 - c1);
+	/*time = (a2 - a1) * 24 * 60 + (b2 - b1) * 60 + (c2 - c1);
 	if (c1 > 0)
 	{
 		sum -= 1.0 * cost[b1] * c1;
@@ -87,6 +114,41 @@ double getMoney(int a1,int b1, int c1, int a2, int b2, int c2, int& time)
 	for (int i = b1; i < b2; ++i)
 	{
 		sum += cost[i] * 60;
+	}*/
+	/*for (; a1 < a2; ++a1)
+	{
+	time += (60 - c1);
+	sum += (60 - c1) * cost[b1++];
+	for (c1 = 0; b1 < 24; ++b1)
+	{
+	sum += 60 * cost[b1];
+	time += 60;
+	}
+	b1 = 0;
+	}
+	for (; b1 < b2; ++b1)
+	{
+	time += (60 - c1);
+	sum += (60 - c1) * cost[b1];
+	c1 = 0;
+	}
+	time += (c2 - c1);
+	sum += (c2 - c1)*cost[b1];*/
+	for (; a1 < a2 || b1 < b2 || c1 < c2;)
+	{
+		sum += cost[b1];
+		++time;
+		++c1;
+		if (c1 >= 60)
+		{
+			c1 = 0;
+			++b1;
+			if (b1 >= 24)
+			{
+				b1 = 0;
+				++a1;
+			}
+		}
 	}
 	return sum;
 }
@@ -118,37 +180,41 @@ int main()
 	double sum = 0;
 	int time;
 	double tmp = 0;
-	for (int i = 0; i < f.size(); ++i)
+	for (int i = 0,out,flag; i < f.size();)
 	{
-		if (prevname != f[i].name || (prevname == f[i].name && prevmonth != f[i].date))
+		out = check(i, n);
+		if (out)
 		{
-			if (sum > 0.0)
-			{
-				printf("Total amout: $%.2f\n", sum / 100.0);
-			}
-			prevmonth = f[i].date;
-			prevname = f[i].name;
+			flag = false;
+			sum = 0;
 			cout << f[i].name << " ";
 			printf("%02d\n", f[i].date);
-			sum = 0;
+			prevname = f[i].name;
+			for (; i < f.size() && (prevname == f[i].name); ++i)
+			{
+				if (f[i].state == 0)
+				{
+					prevdd = f[i].dd;
+					prevhh = f[i].hh;
+					prevmm = f[i].mm;
+					flag = true;
+				}
+				else if (flag && f[i].state == 1)
+				{
+					flag = false;
+					printf("%02d:%02d:%02d %02d:%02d:%02d", prevdd, prevhh, prevmm, f[i].dd, f[i].hh, f[i].mm);
+					tmp = getMoney(prevdd, prevhh, prevmm, f[i].dd, f[i].hh, f[i].mm, time);
+					sum += tmp;
+					cout << " " << time << " $";
+					printf("%.2f\n", tmp / 100.0);
+				}
+			}
+			printf("Total amount: $%.2f\n", sum / 100.0);
 		}
-		if (f[i].state == 0)
-		{
-			prevdd = f[i].dd;
-			prevhh = f[i].hh;
-			prevmm = f[i].mm;
-			state = 0;
-		}
-		else if (state == 0 && f[i].state == 1)
-		{
-			printf("%02d:%02d:%02d %02d:%02d:%02d", prevdd, prevhh, prevmm, f[i].dd, f[i].hh, f[i].mm);
-			tmp = getMoney(prevdd, prevhh, prevmm, f[i].dd, f[i].hh, f[i].mm, time);
-			sum += tmp;
-			cout << " " << time << " $";
-			printf("%.2f\n", tmp / 100.0);
-		}
+		else
+			++i;
 		
 	}
-	printf("Total amout: $%.2f\n", sum / 100.0);
+	
 	return 0;
 }
