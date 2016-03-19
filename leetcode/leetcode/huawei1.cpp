@@ -22,6 +22,7 @@ vector<int> distanceDij;
 vector<int> previous;
 vector<int> pass;
 int minlen = INF;
+int minlen1 = INF;
 vector<int> path;
 vector<int> finalres;
 vector<int> shuffle;
@@ -385,30 +386,30 @@ void mydijdfs(int prev, int endp,int len ,set<int>& myvisit, vector<int>& mydijp
 				finalres.push_back(tmp[j]);
 			}
 			minlen = finallen;
-			cout << "///////////////////////////////////////////////////////////////////////"<< endl;
-			cout << minlen << endl;
-			for (auto i : finalres)
-			{
-				cout << i << "->";
-			}
-			cout << endl;
-			bool flag = false;
-			for (int i = 1; i < finalres.size(); ++i)
-			{
-				if (!flag)
-				{
-					flag = true;
-					cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
-					//fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
-				}
-				else
-				{
-					cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
-					//fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
-				}
+			//cout << "///////////////////////////////////////////////////////////////////////"<< endl;
+			//cout << minlen << endl;
+			//for (auto i : finalres)
+			//{
+			//	cout << i << "->";
+			//}
+			//cout << endl;
+			//bool flag = false;
+			//for (int i = 1; i < finalres.size(); ++i)
+			//{
+			//	if (!flag)
+			//	{
+			//		flag = true;
+			//		cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
+			//		//fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+			//	}
+			//	else
+			//	{
+			//		cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
+			//		//fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+			//	}
 
-			}
-			cout << endl<<"//////////////////////////////////////////////////////////////////////////"<< endl;
+			//}
+			//cout << endl<<"//////////////////////////////////////////////////////////////////////////"<< endl;
 		}
 		return;
 	}
@@ -435,6 +436,89 @@ void mydijdfs(int prev, int endp,int len ,set<int>& myvisit, vector<int>& mydijp
 			}
 			myvisit.insert(tmp[j]);
 			
+		}
+		for (int j = 1; j < tmp.size(); ++j)
+		{
+			mydijpath.push_back(tmp[j]);
+		}
+		mydijdfs(pass[i], endp, len + tmplen, myvisit, mydijpath, count + tmpcount);
+		myvisit = mytmpset;
+		mydijpath = mytmppath;
+	}
+}
+void mydijdfs1(int prev, int endp, int len, set<int>& myvisit, vector<int>& mydijpath, int count)
+{
+	if (len > minlen)
+	{
+		return;
+	}
+	if (count - 1 == pass.size())
+	{
+		vector<int> tmp = Dijkstra3(prev, endp, myvisit);
+		if (tmp.size() == 0)
+		{
+			return;
+		}
+		int finallen = len + distanceDij[endp];
+		if (minlen > finallen)
+		{
+			finalres.clear();
+			finalres.assign(mydijpath.begin(), mydijpath.end());
+			for (int j = 1; j < tmp.size(); ++j)
+			{
+				finalres.push_back(tmp[j]);
+			}
+			minlen = finallen;
+			//cout << "///////////////////////////////////////////////////////////////////////"<< endl;
+			//cout << minlen << endl;
+			//for (auto i : finalres)
+			//{
+			//	cout << i << "->";
+			//}
+			//cout << endl;
+			//bool flag = false;
+			//for (int i = 1; i < finalres.size(); ++i)
+			//{
+			//	if (!flag)
+			//	{
+			//		flag = true;
+			//		cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
+			//		//fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+			//	}
+			//	else
+			//	{
+			//		cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
+			//		//fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+			//	}
+
+			//}
+			//cout << endl<<"//////////////////////////////////////////////////////////////////////////"<< endl;
+		}
+		return;
+	}
+	for (int i = 0; i < pass.size(); ++i)
+	{
+		if (myvisit.find(pass[i]) != myvisit.end())
+		{
+			continue;
+		} 
+		vector<int> tmp = Dijkstra3(prev, pass[i], myvisit);
+		if (tmp.size() == 0)
+		{
+			continue;
+		}
+		int tmplen = distanceDij[pass[i]];
+		set<int> mytmpset = myvisit;
+		vector<int> mytmppath = mydijpath;
+		int tmpcount = 0;
+		for (int j = 1; j < tmp.size(); ++j)
+		{
+			if (binary_search(pass.begin(), pass.end(), tmp[j]))
+			{
+				tmpcount++;
+			}
+			myvisit.insert(tmp[j]);
+
 		}
 		for (int j = 1; j < tmp.size(); ++j)
 		{
@@ -537,13 +621,107 @@ void mydij(int startp, int endp)
 	//}
 	//cout << pass[u];
 }
+void mydij2(int startp, int endp)
+{
+	int i, j;
+	vector<int> cur(pass.begin(), pass.end());
+	vector<vector<int>> tpath;
+	int prevPos = startp;
+	set<int> myvisit;
+	myvisit.insert(startp);
+	vector<int> mydijpath;
+	
+	while (true)
+	{
+		mydijpath.clear();
+		mydijpath.push_back(startp);
+		myvisit.clear();
+		myvisit.insert(startp);
+		int prev = startp;
+		int len = 0;
+		bool flag = true;
+		for (i = 0; i < cur.size(); ++i)
+		{
+			if (myvisit.find(cur[i]) != myvisit.end())
+			{
+				continue;
+			}
+			vector<int> tmp = Dijkstra3(prev, cur[i], myvisit);
+			if (tmp.size() == 0)
+			{
+				flag = false;
+				break;
+			}
+			prev = cur[i];
+			len += distanceDij[cur[i]];
+			if (len > minlen1)
+			{
+				flag = false;
+				break;
+			}
+			for (j = 1; j < tmp.size(); ++j)
+			{
+				myvisit.insert(tmp[j]);
+				mydijpath.push_back(tmp[j]);
+			}
+		}
+		if (i == cur.size() && flag)
+		{
+			vector<int> tmp = Dijkstra3(prev, endp, myvisit);
+			if (tmp.size() == 0)
+			{
+				continue;
+			}
+			len += distanceDij[endp];
+			if (minlen1 > len)
+			{
+				finalres.clear();
+				finalres.assign(mydijpath.begin(), mydijpath.end());
+				for (int j = 1; j < tmp.size(); ++j)
+				{
+					finalres.push_back(tmp[j]);
+				}
+				minlen1 = len;
+				cout << "///////////////////////////////////////////////////////////////////////" << endl;
+				cout << minlen << endl;
+				for (auto i : finalres)
+				{
+					cout << i << "->";
+				}
+				cout << endl;
+				bool flag = false;
+				for (int i = 1; i < finalres.size(); ++i)
+				{
+					if (!flag)
+					{
+						flag = true;
+						cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
+						//fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+					}
+					else
+					{
+						cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
+						//fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+					}
+
+				}
+				cout << endl << "//////////////////////////////////////////////////////////////////////////" << endl;
+			}
+		}
+		bool flag2 = next_permutation(cur.begin(), cur.end());
+		if (!flag2)
+		{
+			break;
+		}
+	}
+}
 int main()
 {
 	
 	int a, b, c, d;
 	int i, j;
 	
-	createFile(50,10);
+	createFile(599,4);
 	CLOCK_START;
 	
 	FILE *p = NULL;
@@ -663,11 +841,24 @@ int main()
 	CLOCK_START;
 	mydij(startPoint, endPoint);
 	cout << minlen << endl;
-	for (auto i:finalres)
+	int tmpsum = 0;
+	int prevp = (finalres.size() > 0) ? finalres[0]: -1;
+	bool tmpflag = false;
+	for (auto i : finalres)
 	{
+		if (!tmpflag)
+		{
+			tmpflag = !tmpflag;
+		}
+		else
+		{
+			tmpsum += link[prevp][i];
+			prevp = i;
+		}
 		cout << i << "->";
 	}
 	cout << endl;
+	cout <<"len = "<< tmpsum << endl;
 	bool flag = false;
 	for (int i = 1; i < finalres.size(); ++i)
 	{
@@ -684,6 +875,45 @@ int main()
 		}
 
 	}
+	CLOCK_END;
+	CLOCK_START;
+	mydij2(startPoint, endPoint);
+	cout << minlen1 << endl;
+	tmpsum = 0;
+	prevp = (finalres.size() > 0) ? finalres[0]: -1;
+	 tmpflag = false;
+	for (auto i : finalres)
+	{
+		if (!tmpflag)
+		{
+			tmpflag = !tmpflag;
+		}
+		else
+		{
+			tmpsum += link[prevp][i];
+			prevp = i;
+		}
+		cout << i << "->";
+	}
+	cout << endl;
+	cout << "len = " << tmpsum << endl;
+	flag = false;
+	for (int i = 1; i < finalres.size(); ++i)
+	{
+		if (!flag)
+		{
+			flag = true;
+			cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
+			//fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+		}
+		else
+		{
+			cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
+			//fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+		}
+
+	}
+
 	CLOCK_END;
 	return 0;
 }
