@@ -10,13 +10,14 @@
 #include <fstream>
 #include <time.h>
 #include <set>
+#define ONLINE
 using namespace std;
 #define INF 100000000
 clock_t m_begin, m_end;
 #define CLOCK_START m_begin = clock()
 #define CLOCK_END printf("\n%f seconds\n", (double)(clock() - m_begin)/CLOCKS_PER_SEC)
 map<pair<int, int>, int> numToLink;
-vector<vector<int>> link(600, vector<int>(600, INF));
+vector<vector<int>> maplink(600, vector<int>(600, INF));
 vector<bool> visited;
 vector<int> distanceDij;
 vector<int> previous;
@@ -84,11 +85,11 @@ void dfs(int start, int end, int curlen)
 	}
 	for (int i = 0; i < 600; ++i)
 	{
-		if (i != start && link[start][i] != INF && !visited[i])
+		if (i != start && maplink[start][i] != INF && !visited[i])
 		{
 			visited[i] = true;
 			path.push_back(i);
-			dfs(i, end, curlen + link[start][i]);
+			dfs(i, end, curlen + maplink[start][i]);
 			path.pop_back();
 			visited[i] = false;
 		}
@@ -118,12 +119,12 @@ void Dijkstra()
 		visited[u] = true;
 		for (int v = 0; v < 600; ++v)
 		{
-			if (!visited[v] && link[u][v]!= INF)
+			if (!visited[v] && maplink[u][v]!= INF)
 			{
-				if (distanceDij[v] > distanceDij[u] + link[u][v])
+				if (distanceDij[v] > distanceDij[u] + maplink[u][v])
 				{
 					previous[v] = u;
-					distanceDij[v] = distanceDij[u] + link[u][v];
+					distanceDij[v] = distanceDij[u] + maplink[u][v];
 				}
 			}
 		}
@@ -153,17 +154,17 @@ void Dijkstra1()
 		visited[u] = true;
 		for (int v = 0; v < 600; ++v)
 		{
-			if (!visited[v] && link[u][v] != INF)
+			if (!visited[v] && maplink[u][v] != INF)
 			{
 				if (find(pass.begin(),pass.end(), v)!= pass.end())
 				{
 					previous[v] = u;
-					distanceDij[v] = distanceDij[u] + link[u][v];
+					distanceDij[v] = distanceDij[u] + maplink[u][v];
 				}
-				else if (distanceDij[v] > distanceDij[u] + link[u][v])
+				else if (distanceDij[v] > distanceDij[u] + maplink[u][v])
 				{
 					previous[v] = u;
-					distanceDij[v] = distanceDij[u] + link[u][v];
+					distanceDij[v] = distanceDij[u] + maplink[u][v];
 				}
 			}
 		}
@@ -194,12 +195,12 @@ vector<int> Dijkstra2(int startp, int endp)
 		visited[u] = true;
 		for (int v = 0; v < 600; ++v)
 		{
-			if (!visited[v] && link[u][v] != INF)
+			if (!visited[v] && maplink[u][v] != INF)
 			{
-				if (distanceDij[v] > distanceDij[u] + link[u][v])
+				if (distanceDij[v] > distanceDij[u] + maplink[u][v])
 				{
 					previous[v] = u;
-					distanceDij[v] = distanceDij[u] + link[u][v];
+					distanceDij[v] = distanceDij[u] + maplink[u][v];
 				}
 			}
 		}
@@ -240,12 +241,12 @@ vector<int> Dijkstra3(int startp, int endp, set<int>& myvisit)
 		visited[u] = true;
 		for (int v = 0; v < 600; ++v)
 		{
-			if (!visited[v] && link[u][v] != INF)
+			if (!visited[v] && maplink[u][v] != INF)
 			{
-				if (distanceDij[v] > distanceDij[u] + link[u][v])
+				if (distanceDij[v] > distanceDij[u] + maplink[u][v])
 				{
 					previous[v] = u;
-					distanceDij[v] = distanceDij[u] + link[u][v];
+					distanceDij[v] = distanceDij[u] + maplink[u][v];
 				}
 			}
 		}
@@ -259,7 +260,7 @@ void Floyd()
 	{
 		for (j = 0; j < 600; ++j)
 		{
-				distanceFord[i][j] = link[i][j];
+				distanceFord[i][j] = maplink[i][j];
 				pathFord[i][j] = -1;
 		}
 	}
@@ -531,9 +532,6 @@ void mydijdfs1(int prev, int endp, int len, set<int>& myvisit, vector<int>& mydi
 }
 void mydij(int startp, int endp)
 {
-	vector<int> dis(pass.size(), 0);
-	vector<vector<int>> tpath;
-	int prevPos = startp;
 	set<int> myvisit;
 	myvisit.insert(startp);
 	vector<int> mydijpath;
@@ -715,22 +713,58 @@ void mydij2(int startp, int endp)
 		}
 	}
 }
-int main()
+void mysave(char* s)
+{
+	
+	FILE *p = fopen(s, "w");
+	if (finalres.size() == 0)
+	{
+		cout << "NA" << endl;
+		fprintf(p, "%s", "NA");
+		fclose(p);
+		p = NULL;
+		return;
+	}
+	bool flag = false;
+	for (int i = 1; i < finalres.size(); ++i)
+	{
+		if (!flag)
+		{
+			flag = true;
+			//cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
+			fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+		}
+		else
+		{
+			//cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
+			fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+		}
+
+	}
+	fclose(p);
+	p = NULL; 
+}
+int main(int argc, char *argv[])
 {
 	
 	int a, b, c, d;
 	int i, j;
-	
-	createFile(599,4);
+	char *topo_file;
+	char *demand_file;
+	char *result_file;
+	topo_file = argv[1];
+	demand_file = argv[2];
+	result_file = argv[3];
+	//createFile(599,4);
 	CLOCK_START;
 	
 	FILE *p = NULL;
-	p = fopen("d:\\topo.csv", "r");
+	p = fopen(topo_file, "r");
 	while (!feof(p) && fscanf(p, "%d,%d,%d,%d\n", &a, &b, &c, &d))
 	{
-		if (link[b][c] > d)
+		if (maplink[b][c] > d)
 		{
-			link[b][c] = min(d, link[b][c]);
+			maplink[b][c] = min(d, maplink[b][c]);
 			numToLink[make_pair(b, c)] = a;
 		}
 		
@@ -738,10 +772,10 @@ int main()
 	fclose(p);
 	for (int i = 0; i < 600; ++i)
 	{
-		link[i][i] = 0;
+		maplink[i][i] = 0;
 	}
 	p = NULL;
-	p = fopen("d:\\demand.csv", "r");
+	p = fopen(demand_file, "r");
 	
 	char s[200];
 	fscanf(p, "%d,%d,%s\n", &startPoint, &endPoint, s);
@@ -852,7 +886,7 @@ int main()
 		}
 		else
 		{
-			tmpsum += link[prevp][i];
+			tmpsum += maplink[prevp][i];
 			prevp = i;
 		}
 		cout << i << "->";
@@ -875,45 +909,48 @@ int main()
 		}
 
 	}
+	mysave(result_file);
 	CLOCK_END;
-	CLOCK_START;
-	mydij2(startPoint, endPoint);
-	cout << minlen1 << endl;
-	tmpsum = 0;
-	prevp = (finalres.size() > 0) ? finalres[0]: -1;
-	 tmpflag = false;
-	for (auto i : finalres)
-	{
-		if (!tmpflag)
-		{
-			tmpflag = !tmpflag;
-		}
-		else
-		{
-			tmpsum += link[prevp][i];
-			prevp = i;
-		}
-		cout << i << "->";
-	}
-	cout << endl;
-	cout << "len = " << tmpsum << endl;
-	flag = false;
-	for (int i = 1; i < finalres.size(); ++i)
-	{
-		if (!flag)
-		{
-			flag = true;
-			cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
-			//fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
-		}
-		else
-		{
-			cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
-			//fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
-		}
+	//CLOCK_START;
+	//mydij2(startPoint, endPoint);
+	//cout << minlen1 << endl;
+	//tmpsum = 0;
+	//prevp = (finalres.size() > 0) ? finalres[0]: -1;
+	// tmpflag = false;
+	//for (auto i : finalres)
+	//{
+	//	if (!tmpflag)
+	//	{
+	//		tmpflag = !tmpflag;
+	//	}
+	//	else
+	//	{
+	//		tmpsum += link[prevp][i];
+	//		prevp = i;
+	//	}
+	//	cout << i << "->";
+	//}
+	//cout << endl;
+	//cout << "len = " << tmpsum << endl;
+	//flag = false;
+	//for (int i = 1; i < finalres.size(); ++i)
+	//{
+	//	if (!flag)
+	//	{
+	//		flag = true;
+	//		cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
+	//		//fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+	//	}
+	//	else
+	//	{
+	//		cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
+	//		//fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+	//	}
 
-	}
+	//}
 
-	CLOCK_END;
+	//CLOCK_END;
 	return 0;
 }
+
+
