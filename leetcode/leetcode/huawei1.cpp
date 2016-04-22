@@ -802,17 +802,17 @@ int main(int argc, char *argv[])
 
 //////////////////////////////////////////////////////////////////////////
 	//dfs
-	/*visited = vector<bool>(600, false);
+	visited = vector<bool>(600, false);
 	visited[startPoint] = true;
 	path.push_back(startPoint);
 	dfs(startPoint, endPoint, 0);
-	p = fopen("d:\\myres.txt", "w");
+	//p = fopen("d:\\myres.txt", "w");
 	if (finalres.size() == 0)
 	{
 		cout << "NA" << endl;
-		fprintf(p, "%s", "NA");
-		fclose(p);
-		p = NULL;
+	//	fprintf(p, "%s", "NA");
+	//	fclose(p);
+	//	p = NULL;
 		return 0;
 	}
 	bool flag = false;
@@ -836,21 +836,23 @@ int main(int argc, char *argv[])
 		{
 			flag = true;
 			cout << numToLink[make_pair(finalres[i - 1], finalres[i])];
-			fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+			//fprintf(p, "%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
 		}
 		else
 		{
 			cout << "|" << numToLink[make_pair(finalres[i - 1], finalres[i])];
-			fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
+			//fprintf(p, "|%d", numToLink[make_pair(finalres[i - 1], finalres[i])]);
 		}
 		
 	}
-	fclose(p);
-	p = NULL;*/
+	//fclose(p);
+	//p = NULL;
 	
 //////////////////////////////////////////////////////////////////////////
 	
 	CLOCK_END;
+	minlen = INF;
+	//visited[startPoint] = true;
 	//////////////////////////////////////////////////////////////////////////
 //dij
 	CLOCK_START;
@@ -860,12 +862,12 @@ int main(int argc, char *argv[])
 	printDij(myres);
 	CLOCK_END;
 	//////////////////////////////////////////////////////////////////////////
-	CLOCK_START;
-	Dijkstra1();
-	myres = getPathDij(startPoint, endPoint);
-	cout << distanceDij[endPoint] << endl;
-	printDij(myres);
-	CLOCK_END;
+	//CLOCK_START;
+	//Dijkstra1();
+	//myres = getPathDij(startPoint, endPoint);
+	//cout << distanceDij[endPoint] << endl;
+	//printDij(myres);
+	//CLOCK_END;
 	/*CLOCK_START;
 	Floyd();
 	cout << distanceFord[startPoint][endPoint]<<endl;
@@ -893,7 +895,7 @@ int main(int argc, char *argv[])
 	}
 	cout << endl;
 	cout <<"len = "<< tmpsum << endl;
-	bool flag = false;
+	flag = false;
 	for (int i = 1; i < finalres.size(); ++i)
 	{
 		if (!flag)
