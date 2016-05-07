@@ -160,7 +160,8 @@ vector<double> BatchQueryExecutionTime(int kindSize, const vector<vector<int>>&k
 }
 int main()
 {
-	vector<string> sqls{ "insert into tableA values1",
+	cout << (int)-1.5 << endl;
+	/*vector<string> sqls{ "insert into tableA values1",
 
 		"insert into tableB values(2,",
 
@@ -173,6 +174,6 @@ int main()
 	{
 		cout << i << endl;
 	}
-
+*/
 
 }

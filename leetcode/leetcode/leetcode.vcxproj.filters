@@ -29,7 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="al.cpp">
+    <ClCompile Include="Minimum Size Subarray Sum.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
