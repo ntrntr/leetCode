@@ -2,194 +2,237 @@
 #include <cstdlib>
 #include <unordered_map>
 #include <iostream>
-
-
-
-class ListNode2
-{
-public:
-
-	void Reset()
-	{
-		key = INT_MIN;
-		value = -1;
-		prev = nullptr;
-		next = nullptr;
-	}
-
-	ListNode2()
-	{
-		Reset();
-	}
-
-	ListNode2* Init(int key, int value, ListNode2* prev = nullptr, ListNode2* next = nullptr)
-	{
-		this->key = key;
-		this->value = value;
-		this->prev = prev;
-		this->next = next;
-		return this;
-	}
-
-
-	ListNode2(int key, int value, ListNode2* prev = nullptr, ListNode2* next = nullptr)
-		: key(key),
-		value(value),
-		prev(prev),
-		next(next)
-	{
-	}
-
-	int key;
-	int value;
-	ListNode2* prev;
-	ListNode2* next;
-};
-
-class NodePool
-{
-public:
-	NodePool(int initSize)
-	{
-		for (int i = 0; i < initSize; ++i)
-		{
-			nodeList.push_back(new ListNode2());
-		}
-	}
-
-	ListNode2* AccquireNode()
-	{
-		if (nodeList.size() == 0)
-		{
-			nodeList.push_back(new ListNode2());
-		}
-		auto ret = nodeList.back();
-		nodeList.pop_back();
-		return ret;
-	}
-
-	bool ReleaseNode(ListNode2* node)
-	{
-		node->Reset();
-		nodeList.push_back(node);
-		return true;
-	}
-private:
-	std::vector<ListNode2*> nodeList;
-};
-
+using namespace std;
 class LRUCache {
+	int maxsize;
+	// key is the cache key, the pair contains value and place in the queue
+	std::unordered_map<int, pair<int, list<int>::iterator>> hashmap;
+	list<int> queue;
+
+	void updateMapAndQueue(int key, int value, list<int>& queue,
+		unordered_map<int, pair<int, list<int>::iterator>>& hashmap)
+	{
+		queue.push_back(key);
+		auto iter = end(queue);
+		hashmap[key] = pair<int, list<int>::iterator>(value, --iter);
+	}
 public:
 	LRUCache(int capacity)
-	{
-		_nodePool = new NodePool(4);
-		_capacity = capacity;
-		_currentSize = 0;
-		helperNode = _nodePool->AccquireNode()->Init(-1,-1);
-		helperNode->prev = helperNode;
-	}
+		: maxsize(capacity)
+	{}
 
 	int get(int key) {
-		if (_fastMap.find(key) != _fastMap.end())
+		int value = -1;
+		auto found = hashmap.find(key);
+		if (found != std::end(hashmap))
 		{
-			ListNode2* node = _fastMap[key];
-			UpdateNode(node);
-			Print();
-
-			return node->value;
+			value = found->second.first;
+			queue.erase(found->second.second);
+			updateMapAndQueue(key, value, queue, hashmap);
 		}
-		Print();
-
-		return -1;
-	}
-
-	void UpdateNode(ListNode2* node)
-	{
-		RemoveNode(node);
-		AddNode(node);
-	}
-
-	void AddNode(ListNode2* node)
-	{
-		ListNode2* helper = helperNode;
-		ListNode2* lastNode = helper->prev;
-		lastNode->next = node;
-		node->prev = lastNode;
-		node->next = nullptr;
-		helper->prev = node;
-	}
-
-	void RemoveNode(ListNode2* node)
-	{
-		if (node->next == nullptr)
-		{
-			helperNode->prev = node->prev;
-			node->prev->next = nullptr;
-		}
-		else
-		{
-			node->prev->next = node->next;
-			node->next->prev = node->prev;
-		}
+		return value;
 	}
 
 	void put(int key, int value) {
-		if (_capacity == 0)
-		{
-			Print();
-			return;
-		}
-		if (_fastMap.find(key) != _fastMap.end())
-		{
-			ListNode2* node = _fastMap[key];
-			node->value = value;
-			UpdateNode(node);
-			Print();
-			return;
-		}
-		auto node = _nodePool->AccquireNode()->Init(key,value);
-		if (_currentSize < _capacity)
-		{
-			AddNode(node);
-			_currentSize++;
-			_fastMap[key] = node;
-			Print();
-
-		}
+		auto found = hashmap.find(key);
+		if (found != std::end(hashmap))
+			queue.erase(found->second.second);
 		else
-		{
-			auto nodeToRemove = helperNode->next;
-			RemoveNode(nodeToRemove);
-			_fastMap.erase(nodeToRemove->key);
-			delete nodeToRemove;
-			AddNode(node);
-			_fastMap[node->key] = node;
-			Print();
-		}
-		Print();
-
+			if (queue.size() == maxsize)
+			{
+				hashmap.erase(queue.front());
+				queue.pop_front();
+			}
+		updateMapAndQueue(key, value, queue, hashmap);
 	}
-
-	void Print()
-	{
-		return;
-		for (const auto key_value_map : _fastMap)
-		{
-			std::cout << "key:" << key_value_map.first<< ", value:" << key_value_map.second->value << "\t";
-			std::cout << std::endl;
-		}
-
-		std::cout << std::endl << "------" << std::endl;
-
-
-	}
-private:
-	int _currentSize;
-	int _capacity;
-	ListNode2 * helperNode;
-	std::unordered_map<int, ListNode2*> _fastMap;
-	NodePool* _nodePool;
 };
+
+//
+// class ListNode2
+// {
+// public:
+//
+// 	void Reset()
+// 	{
+// 		key = INT_MIN;
+// 		value = -1;
+// 		prev = nullptr;
+// 		next = nullptr;
+// 	}
+//
+// 	ListNode2()
+// 	{
+// 		Reset();
+// 	}
+//
+// 	ListNode2* Init(int key, int value, ListNode2* prev = nullptr, ListNode2* next = nullptr)
+// 	{
+// 		this->key = key;
+// 		this->value = value;
+// 		this->prev = prev;
+// 		this->next = next;
+// 		return this;
+// 	}
+//
+//
+// 	ListNode2(int key, int value, ListNode2* prev = nullptr, ListNode2* next = nullptr)
+// 		: key(key),
+// 		value(value),
+// 		prev(prev),
+// 		next(next)
+// 	{
+// 	}
+//
+// 	int key;
+// 	int value;
+// 	ListNode2* prev;
+// 	ListNode2* next;
+// };
+//
+// class NodePool
+// {
+// public:
+// 	NodePool(int initSize)
+// 	{
+// 		for (int i = 0; i < initSize; ++i)
+// 		{
+// 			nodeList.push_back(new ListNode2());
+// 		}
+// 	}
+//
+// 	ListNode2* AccquireNode()
+// 	{
+// 		if (nodeList.size() == 0)
+// 		{
+// 			nodeList.push_back(new ListNode2());
+// 		}
+// 		auto ret = nodeList.back();
+// 		nodeList.pop_back();
+// 		return ret;
+// 	}
+//
+// 	bool ReleaseNode(ListNode2* node)
+// 	{
+// 		node->Reset();
+// 		nodeList.push_back(node);
+// 		return true;
+// 	}
+// private:
+// 	std::vector<ListNode2*> nodeList;
+// };
+//
+// class LRUCache {
+// public:
+// 	LRUCache(int capacity)
+// 	{
+// 		_nodePool = new NodePool(4);
+// 		_capacity = capacity;
+// 		_currentSize = 0;
+// 		helperNode = _nodePool->AccquireNode()->Init(-1,-1);
+// 		helperNode->prev = helperNode;
+// 	}
+//
+// 	int get(int key) {
+// 		if (_fastMap.find(key) != _fastMap.end())
+// 		{
+// 			ListNode2* node = _fastMap[key];
+// 			UpdateNode(node);
+// 			Print();
+//
+// 			return node->value;
+// 		}
+// 		Print();
+//
+// 		return -1;
+// 	}
+//
+// 	void UpdateNode(ListNode2* node)
+// 	{
+// 		RemoveNode(node);
+// 		AddNode(node);
+// 	}
+//
+// 	void AddNode(ListNode2* node)
+// 	{
+// 		ListNode2* helper = helperNode;
+// 		ListNode2* lastNode = helper->prev;
+// 		lastNode->next = node;
+// 		node->prev = lastNode;
+// 		node->next = nullptr;
+// 		helper->prev = node;
+// 	}
+//
+// 	void RemoveNode(ListNode2* node)
+// 	{
+// 		if (node->next == nullptr)
+// 		{
+// 			helperNode->prev = node->prev;
+// 			node->prev->next = nullptr;
+// 		}
+// 		else
+// 		{
+// 			node->prev->next = node->next;
+// 			node->next->prev = node->prev;
+// 		}
+// 	}
+//
+// 	void put(int key, int value) {
+// 		if (_capacity == 0)
+// 		{
+// 			Print();
+// 			return;
+// 		}
+// 		if (_fastMap.find(key) != _fastMap.end())
+// 		{
+// 			ListNode2* node = _fastMap[key];
+// 			node->value = value;
+// 			UpdateNode(node);
+// 			Print();
+// 			return;
+// 		}
+// 		auto node = _nodePool->AccquireNode()->Init(key,value);
+// 		if (_currentSize < _capacity)
+// 		{
+// 			AddNode(node);
+// 			_currentSize++;
+// 			_fastMap[key] = node;
+// 			Print();
+//
+// 		}
+// 		else
+// 		{
+// 			auto nodeToRemove = helperNode->next;
+// 			RemoveNode(nodeToRemove);
+// 			_fastMap.erase(nodeToRemove->key);
+// 			delete nodeToRemove;
+// 			AddNode(node);
+// 			_fastMap[node->key] = node;
+// 			Print();
+// 		}
+// 		Print();
+//
+// 	}
+//
+// 	void Print()
+// 	{
+// 		return;
+// 		for (const auto key_value_map : _fastMap)
+// 		{
+// 			std::cout << "key:" << key_value_map.first<< ", value:" << key_value_map.second->value << "\t";
+// 			std::cout << std::endl;
+// 		}
+//
+// 		std::cout << std::endl << "------" << std::endl;
+//
+//
+// 	}
+// private:
+// 	int _currentSize;
+// 	int _capacity;
+// 	ListNode2 * helperNode;
+// 	std::unordered_map<int, ListNode2*> _fastMap;
+// 	NodePool* _nodePool;
+// };
 
 int main(int argc, char* argv[])
 {
