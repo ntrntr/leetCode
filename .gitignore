@@ -214,3 +214,8 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+venv
+.idea
+/leetcode/leetcode.VC.db
+/leetcode/leetcode/leetcode.rc
+/leetcode/leetcode/resource.h
