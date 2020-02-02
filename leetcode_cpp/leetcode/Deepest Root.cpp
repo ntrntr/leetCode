@@ -1,121 +1,108 @@
-#include <vector>
 #include <iostream>
-#include <string.h>
-#include <algorithm>
-#include <string>
+#include <cstdio>
 #include <map>
-#include <stack>
-#include <unordered_map>
-#include <limits.h>
+#include <vector>
 #include <set>
+
 using namespace std;
-int cccc;
-vector<vector<bool>> f;
-vector<bool> visited;
-vector<int> len;
-int n;
-int getlen(int x, vector<vector<bool>>& link, vector<bool>& visited)
-{
-	int res = 0;
-	int tmp = 0;
-	for (int i = 1; i <= n; ++i)
-	{
-		if (i == x || visited[i] == true || link[x][i] == false)
-		{
-			continue;
-		}
-		visited[i] = true;
-		tmp = 1 + getlen(i, link, visited);
-		visited[i] = false;
-		if (tmp > res)
-		{
-			res = tmp;
-		}
-	}
-	return res;
-}
-vector<int> com;
-int getNum(int x)
-{
-	if (com[x] != x)
-	{
-		com[x] = getNum(com[x]);
-	}
-		return com[x];
-}
-void link(int a, int b)
-{
-	int ta = getNum(a);
-	int tb = getNum(b);
-	if (ta != tb)
-	{
-		com[ta] = tb;
-		--cccc;
-	}
-}
-int maxlen = 0;
-set<int> res, rrs;
-void dfs(int a, int step)
-{
-	if (step > maxlen)
-	{
+
+const int maxx = 10001;
+
+map<int, vector<int> > tree;
+set<int> res;
+set<int> tres;
+int pre[maxx], cnt, maxn = -1;
+int visit[maxx];
+
+void dfs(int p, int step){
+	if (step > maxn){
 		res.clear();
-		res.insert(a);
-		maxlen = step;
+		res.insert(p);
+		maxn = step;
 	}
-	else if (step == maxlen)
-	{
-		res.insert(a);
-	}
-	for (int i = 1; i <= n; ++i)
-	{
-		if (!visited[i] && f[a][i])
-		{
-			visited[i] = true;
-			dfs(i, step + 1);
-			visited[i] = false;
-		}
-	}
-}
-int main()
-{
-	
-	cin >> n;
-	int a, b;
-	 f= vector<vector<bool>>(n + 1, vector<bool>(n + 1, false));
-	visited = vector<bool>(n + 1, false);
-	len = vector<int>(n + 1, 1);
-	com = vector<int>(n + 1, -1);
-	cccc = n - 1;
-	for (int i = 0; i <= n; ++i)
-	{
-		com[i] = i;
-	}
-	
-	for (int i = 0; i < n - 1; ++i)
-	{
-		cin >> a >> b;
-		f[a][b] = true;
-		f[b][a] = true;
-		link(a, b);
+	else if (step == maxn){
+		res.insert(p);
 	}
 
-	if (cccc !=  0)
-	{
-		cout << "Error: " << cccc + 1 << " components" << endl;
+	vector<int>::iterator ite = tree[p].begin();
+	for (; ite != tree[p].end(); ++ite){
+		if (visit[*ite] != 1){
+			visit[*ite] = 1;
+			dfs(*ite, step + 1);
+			visit[*ite] = 0;
+		}
+	}
+}
+
+void init(int n){
+	int i;
+
+	for (i = 1; i <= n; ++i){
+		pre[i] = i;
+		visit[i] = 0;
+	}
+}
+
+int root(int x){
+	if (x != pre[x]){
+		pre[x] = root(pre[x]);
+	}
+	return pre[x];
+}
+
+void merge(int x, int y){
+	int fa = root(x);
+	int fb = root(y);
+	if (fa != fb){
+		pre[fa] = fb;
+		--cnt;
+	}
+}
+
+int main(){
+	int n, i, a, b;
+	set<int>::iterator ite;
+	scanf("%d", &n);
+	cnt = n - 1;
+
+	init(n);
+
+	for (i = 1; i < n; ++i){
+		scanf("%d %d", &a, &b);
+		tree[a].push_back(b);
+		tree[b].push_back(a);
+		merge(a, b);
+	}
+
+	if (cnt != 0){
+		printf("Error: %d components\n", 1 + cnt);
 		return 0;
 	}
-	visited[1] = true;
-	dfs(1, 1);
-	visited[1] = false;
-	rrs.insert(res.begin(), res.end());
-	visited[*res.begin()] = true;
-	dfs(*res.begin(), 1);
-	rrs.insert(res.begin(), res.end());
 
-	for (auto i:rrs)
-	{
-		cout << i << endl;
+	visit[1] = 1;
+	dfs(1, 1);
+	visit[1] = 0;//因为已经是树，所以不会再有环了，所以所有dfs后都恢复该点的可访问性很重要
+
+	ite = res.begin();
+	for (; ite != res.end(); ++ite){
+		tres.insert(*ite);
 	}
+
+
+	int point = (*res.begin());
+	visit[point] = 1;
+	dfs(point, 1);
+	visit[point] = 0;
+
+	ite = res.begin();
+	for (; ite != res.end(); ++ite){
+		tres.insert(*ite);
+	}
+
+	ite = tres.begin();
+	for (; ite != tres.end(); ++ite){
+		printf("%d\n", *ite);
+	}
+
 	return 0;
 }
