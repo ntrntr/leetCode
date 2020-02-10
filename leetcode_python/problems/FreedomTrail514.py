@@ -1,3 +1,4 @@
+import collections
 import unittest
 import math
 
@@ -96,7 +97,7 @@ class Solution(object):
             for match_ring_index in charMap.get(current_ring_char):
                 # update current state
                 current_state[match_ring_index] = prev_state[match_ring_index] + 1
-                # we no the key char current count, we can calc from other char to current char step count
+                # we know the key char current count, we can calc from other char to current char step count
                 for j in range(ringLen):
                     if j == match_ring_index:
                         continue
@@ -106,6 +107,26 @@ class Solution(object):
         return prev_state[0]
 
 
+'''
+Store every index of every character in ring in indexes hashtable
+Initialize steps for every index in ring in DP
+For first character of key, update every DP[i] as distance btw zero index plus 1 step for press
+For every next character in key, update every DP[i] as min distance btw pre indexes plus 1 step for press
+Return min DP for last character of key
+'''
+
+class Solution:
+    def findRotateSteps(self, ring, key):
+        indexes, n, dp, pre = collections.defaultdict(list), len(ring), [0] * len(ring), key[0]
+        for i, c in enumerate(ring):
+            indexes[c].append(i)
+        for i in indexes[key[0]]:
+            dp[i] = min(i, n - i) + 1
+        for c in key[1:]:
+            for i in indexes[c]:
+                dp[i] = min(dp[j] + min(i - j, j + n - i) if i >= j else dp[j] + min(j - i, i + n - j) for j in indexes[pre]) + 1
+            pre = c
+        return min(dp[i] for i in indexes[key[-1]])
 
 
 class MyTestCase(unittest.TestCase):
