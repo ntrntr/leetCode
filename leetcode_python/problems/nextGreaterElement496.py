@@ -2,33 +2,35 @@ import unittest
 
 
 class Solution(object):
-    # def nextGreaterElement(self, nums1, nums2):
-#     #     """
-#     #     :type nums1: List[int]
-#     #     :type nums2: List[int]
-#     #     :rtype: List[int]
-#     #     """
-#     #     ret = []
-#     #     my_dict = {}
-#     #     for index, num in enumerate(nums2):
-#     #         my_dict[num] = index
-#     #     for num in nums1:
-#     #         index = my_dict[num] + 1
-#     #         isFind = False
-#     #         for ind in range(index, len(nums2)):
-#     #             if num < nums2[ind]:
-#     #                 ret.append(nums2[ind])
-#     #                 isFind = True
-#     #                 break
-#     #         if not isFind:
-#     #             ret.append(-1)
-#     #     return ret
-    def nextGreaterElement(self, nums1, nums2):
+    def nextGreaterElement2(self, nums1, nums2):
         """
         :type nums1: List[int]
         :type nums2: List[int]
         :rtype: List[int]
         """
+        ret = []
+        my_dict = {}
+        for index, num in enumerate(nums2):
+            my_dict[num] = index
+        for num in nums1:
+            index = my_dict[num] + 1
+            isFind = False
+            for ind in range(index, len(nums2)):
+                if num < nums2[ind]:
+                    ret.append(nums2[ind])
+                    isFind = True
+                    break
+            if not isFind:
+                ret.append(-1)
+        return ret
+
+    def nextGreaterElement1(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        my_stack = []
         nums2_len = len(nums2)
         quick_table = [-1] * nums2_len
         for index in range(nums2_len - 1, -1, -1):
@@ -51,6 +53,21 @@ class Solution(object):
             my_dict[num] = index
         return [quick_table[my_dict[num]] for num in nums1]
 
+    def nextGreaterElement(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        stack = []
+        ret_dict = {}
+        for num in nums2:
+            while len(stack) > 0 and stack[-1] < num:
+                ret_dict[stack[-1]] = num
+                stack.pop(-1)
+            stack.append(num)
+        # print "stack", ret_dict
+        return [ret_dict.get(num, -1) for num in nums1]
 
 class MyTestCase(unittest.TestCase):
 
