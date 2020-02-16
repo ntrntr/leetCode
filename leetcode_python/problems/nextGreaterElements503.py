@@ -28,15 +28,13 @@ class Solution(object):
         """
         stack = []
         nums_len = len(nums)
-        new_nums = nums + nums[:-1]
         ret = [-1] * nums_len
-        for index, num in enumerate(new_nums):
-            while len(stack) > 0 and stack[-1][0] < num:
-                if stack[-1][1] < nums_len:
-                    ret[stack[-1][1]] = num
-                # print "set index:%s to %s, ret:%s" % (stack[-1][-1], num, ret,)
+        for index in range(nums_len * 2):
+            num = nums[index % nums_len]
+            while len(stack) > 0 and nums[stack[-1]] < num:
+                ret[stack[-1]] = num
                 stack.pop(-1)
-            stack.append((num, index,))
+            index < nums_len and stack.append(index)
             # print "push num:%s, index:%s, stack:%s" % (num, index, stack)
         return ret
 
