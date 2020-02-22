@@ -1,4 +1,5 @@
 import functools
+import heapq
 def mycmp(left, right):
     if left[0] == right[0]:
         return right[1] - left[1]
@@ -14,24 +15,18 @@ class Solution(object):
         :type Capital: List[int]
         :rtype: int
         """
-        if k==0:
-            return W
-        import collections
-        my_dict = {}
-
         tm = zip(Capital, Profits)
-        self.remove_and_update(tm, my_dict, W)
+        tm.sort(key=lambda x:x[0])
+        data = []
         currentW = W
-        while k>0 and my_dict:
-            max_key = max(my_dict.keys())
-            my_dict[max_key] = my_dict[max_key] - 1
-            if my_dict[max_key] == 0:
-                my_dict.pop(max_key)
-            # print "add", max_key
-            currentW = max_key + currentW
-            self.remove_and_update(tm, my_dict, currentW)
-            k = k -1
-        # print "ret", currentW
+        index = 0
+        while k > 0:
+            while index < len(tm) and tm[index][0] <= currentW:
+                heapq.heappush(data, -tm[index][1])
+                index = index + 1
+            if data:
+                currentW = currentW - heapq.heappop(data)
+            k = k - 1
         return currentW
 
 
