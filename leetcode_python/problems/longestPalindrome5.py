@@ -10,23 +10,35 @@ class Solution(object):
         max_len = 1
         begin = 0
         for i in range(s_len):
-            left = i -1
-            right = i + 1
-            while left >=0 and right < s_len and s[left] == s[right]:
-                if right - left + 1 >  max_len:
-                    max_len = right - left + 1
-                    begin = left
-                left = left - 1
-                right = right + 1
-            left = i
-            right = i + 1
-            while left >=0 and right < s_len and s[left] == s[right]:
-                if right - left + 1 >  max_len:
-                    max_len = right - left + 1
-                    begin = left
-                left = left - 1
-                right = right + 1
+            left = i - min(1, max_len // 2)
+            right = i + min(1, max_len // 2)
+            if self.isPalindrome(s, left, right):
+                while left >= 0 and right < s_len and s[left] == s[right]:
+                    if right - left + 1 > max_len:
+                        max_len = right - left + 1
+                        begin = left
+                    left = left - 1
+                    right = right + 1
+            left = i - min(0, max_len // 2)
+            right = i- min(0, max_len // 2) + 1
+            if self.isPalindrome(s, left, right):
+                while left >= 0 and right < s_len and s[left] == s[right]:
+                    if right - left + 1 > max_len:
+                        max_len = right - left + 1
+                        begin = left
+                    left = left - 1
+                    right = right + 1
         return s[begin:begin + max_len]
+
+    def isPalindrome(self, s, left, right):
+        if left < 0 or right >= len(s):
+            return False
+        while left < right:
+            if s[left] != s[right]:
+                return False
+            left = left + 1
+            right = right - 1
+        return True
 
 
 import unittest
