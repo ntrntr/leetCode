@@ -40,23 +40,45 @@
 #             right = right - 1
 #         return True
 
+# class Solution(object):
+#     def longestPalindrome(self, s):
+#         """
+#         :type s: str
+#         :rtype: str
+#         """
+#         ret = ''
+#         s_len = len(s)
+#         i = s_len - 1
+#         dp = [[False] * s_len for i in range(s_len) ]
+#         while i >= 0:
+#             for j in range(i, s_len):
+#                 dp[i][j] = s[i] == s[j] and (j - i < 3 or dp[i + 1][j - 1])
+#                 if dp[i][j] and j - i + 1 > len(ret):
+#                     ret = s[i:j+1]
+#             i = i - 1
+#         return ret
+
 class Solution(object):
     def longestPalindrome(self, s):
         """
         :type s: str
         :rtype: str
         """
-        ret = ''
-        s_len = len(s)
-        i = s_len - 1
-        dp = [[False] * s_len for i in range(s_len) ]
-        while i >= 0:
-            for j in range(i, s_len):
-                dp[i][j] = s[i] == s[j] and (j - i < 3 or dp[i + 1][j - 1])
-                if dp[i][j] and j - i + 1 > len(ret):
-                    ret = s[i:j+1]
-            i = i - 1
-        return ret
+
+        longest = 0
+        start = 0
+        m = len(s)
+
+        for i in range(m):
+            if i - longest >= 1 and s[i - longest - 1:i + 1] == s[i - longest - 1:i + 1][::-1]:
+                start = i - longest - 1
+                longest += 2
+                continue
+            if i - longest >= 0 and s[i - longest:i + 1] == s[i - longest:i + 1][::-1]:
+                start = i - longest
+                longest += 1
+
+        return s[start:start + longest]
 
 import unittest
 
