@@ -20,7 +20,19 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        return self.LCS(s, ''.join(reversed(s)))
+        s_len = len(s)
+        state = [[0] * (s_len+1) for i in range((s_len+1))]
+        for i in range(s_len-1, -1, -1):
+            state[i][i] = 1
+            for j in range(i+1, s_len, 1):
+                if s[i] == s[j]:
+                    state[i][j] = state[i + 1][j-1] + 2
+                else:
+                    state[i][j] = max(state[i+1][j], state[i][j-1])
+                # print "i:%s, j:%s, data:%s, state:%s" % (i,j,state[i][j],state)
+        # print state
+        return state[0][s_len-1]
+
 
 class MyTestCase(unittest.TestCase):
 
