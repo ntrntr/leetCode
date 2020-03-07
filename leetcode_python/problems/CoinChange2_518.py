@@ -8,26 +8,42 @@ class Solution(object):
         :type coins: List[int]
         :rtype: int
         """
+        dp = [0 for i in xrange(amount+1)]
+        dp[0] = 1
         coins.sort()
-        while coins and coins[-1] > amount:
-            coins.pop()
-        coin_index = len(coins) - 1
-        return self.dfs(coin_index, amount, coins)
+        for coin in coins:
+            for i in range(coin, amount + 1, 1):
+                dp[i] = dp[i - coin] + dp[i]
+        return dp[amount]
 
-    def dfs(self, coin_index, amount, coins):
-        ret = 0
-        if amount == 0:
-            return 1
-        if coin_index < 0:
-            return 0
-        if amount < 0:
-            return 0
-        current_value = coins[coin_index]
-        # use value
-        ret += self.dfs(coin_index, amount - current_value, coins)
-        # not use value
-        ret += self.dfs(coin_index - 1, amount, coins)
-        return ret
+
+# class Solution(object):
+#     def change(self, amount, coins):
+#         """
+#         :type amount: int
+#         :type coins: List[int]
+#         :rtype: int
+#         """
+#         coins.sort()
+#         while coins and coins[-1] > amount:
+#             coins.pop()
+#         coin_index = len(coins) - 1
+#         return self.dfs(coin_index, amount, coins)
+#
+#     def dfs(self, coin_index, amount, coins):
+#         ret = 0
+#         if amount == 0:
+#             return 1
+#         if coin_index < 0:
+#             return 0
+#         if amount < 0:
+#             return 0
+#         current_value = coins[coin_index]
+#         # use value
+#         ret += self.dfs(coin_index, amount - current_value, coins)
+#         # not use value
+#         ret += self.dfs(coin_index - 1, amount, coins)
+#         return ret
 
 
 class MyTestCase(unittest.TestCase):
