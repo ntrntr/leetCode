@@ -25,19 +25,43 @@ class Solution(object):
         :type machines: List[int]
         :rtype: int
         """
-        machines_sums = sum(machines)
+        machines_sums = 0
+        for n in machines:
+            machines_sums += n
         machines_len = len(machines)
         if machines_sums % machines_len != 0:
             return -1
+        expect_num = machines_sums / machines_len
+        left_sum = []
+        sum = 0
+        for num in machines:
+            sum += num
+            left_sum.append(sum)
         ret = 0
-        expected_num = machines_sums // machines_len
-        for i in range(machines_len):
-            if machines[i] == expected_num:
-                continue
-            elif machines[i] < expected_num:
-                require = expected_num - machines[i]
+        for index in range(machines_len):
+            if index - 1 < 0:
+                L = 0
             else:
-                push = machines[i]
+                L = expect_num * index - left_sum[index - 1]
+
+            if index + 1 >= machines_len:
+                R = 0
+            else:
+                R = expect_num * (machines_len - index - 1) - (left_sum[machines_len - 1] - left_sum[index])
+
+            if L > 0 and R > 0:
+                tmp = self.myabs(L) + self.myabs(R)
+                ret = max(tmp, ret)
+            else:
+                tmp = max(self.myabs(L), self.myabs(R))
+                ret = max(tmp, ret)
+        return ret
+
+    def myabs(self, n):
+        if n >= 0:
+            return n
+        else:
+            return -n
 
 
 
@@ -47,7 +71,7 @@ class MyTestCase(unittest.TestCase):
         self.solution = Solution()
 
     def test_something1(self):
-        pass
+        self.assertEqual(self.solution.findMinMoves([1,0,5]),3)
 
     def test_something2(self):
         pass
