@@ -47,7 +47,7 @@ class Solution(object):
 
 
     def useNewStrategy(self):
-        return self.n_rows * self.n_cols > 10000
+        return self.n_rows * self.n_cols > 1500
 
 
 # Your Solution object will be instantiated and called as such:
