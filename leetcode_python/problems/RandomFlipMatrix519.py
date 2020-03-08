@@ -1,6 +1,8 @@
 import unittest
 
 import random
+
+
 class Solution(object):
 
     def __init__(self, n_rows, n_cols):
@@ -8,46 +10,74 @@ class Solution(object):
         :type n_rows: int
         :type n_cols: int
         """
-        self.n_rows = n_rows
+        self.end = n_rows * n_cols - 1
         self.n_cols = n_cols
-        self.data = []
-        if not self.useNewStrategy():
-            self.index = [i for i in xrange(self.n_rows * self.n_cols)]
-            random.shuffle(self.index)
-        else:
-            self.index_contians = {}
         self.reset()
 
     def flip(self):
         """
         :rtype: List[int]
         """
-        if not self.useNewStrategy():
-            index = self.current_index
-            self.current_index = (self.current_index + 1) % (self.n_rows * self.n_cols)
-        else:
-            index = self.current_index
-            self.index_contians[index] = True
-            new_index = random.randint(0, self.n_rows * self.n_cols - 1)
-            while new_index in self.index_contians:
-                new_index = random.randint(0, self.n_rows * self.n_cols - 1)
-            self.current_index = new_index
-        return [index // self.n_cols, index % self.n_cols]
-
+        rand = random.randint(self.start, self.end)
+        res = self.d.get(rand, rand)
+        self.d[rand] = self.d.get(self.start, self.start)
+        self.start = self.start + 1
+        return divmod(res, self.n_cols)
 
     def reset(self):
         """
         :rtype: None
         """
-        if not self.useNewStrategy():
-            self.current_index = random.randint(0, self.n_rows * self.n_cols - 1)
-        else:
-            self.index_contians = {}
-            self.current_index = random.randint(0, self.n_rows * self.n_cols - 1)
+        self.d = {}
+        self.start = 0
 
-
-    def useNewStrategy(self):
-        return self.n_rows * self.n_cols > 1500
+# class Solution(object):
+#
+#     def __init__(self, n_rows, n_cols):
+#         """
+#         :type n_rows: int
+#         :type n_cols: int
+#         """
+#         self.n_rows = n_rows
+#         self.n_cols = n_cols
+#         self.data = []
+#         if not self.useNewStrategy():
+#             self.index = [i for i in xrange(self.n_rows * self.n_cols)]
+#             random.shuffle(self.index)
+#         else:
+#             self.index_contians = {}
+#         self.reset()
+#
+#     def flip(self):
+#         """
+#         :rtype: List[int]
+#         """
+#         if not self.useNewStrategy():
+#             index = self.current_index
+#             self.current_index = (self.current_index + 1) % (self.n_rows * self.n_cols)
+#         else:
+#             index = self.current_index
+#             self.index_contians[index] = True
+#             new_index = random.randint(0, self.n_rows * self.n_cols - 1)
+#             while new_index in self.index_contians:
+#                 new_index = random.randint(0, self.n_rows * self.n_cols - 1)
+#             self.current_index = new_index
+#         return [index // self.n_cols, index % self.n_cols]
+#
+#
+#     def reset(self):
+#         """
+#         :rtype: None
+#         """
+#         if not self.useNewStrategy():
+#             self.current_index = random.randint(0, self.n_rows * self.n_cols - 1)
+#         else:
+#             self.index_contians = {}
+#             self.current_index = random.randint(0, self.n_rows * self.n_cols - 1)
+#
+#
+#     def useNewStrategy(self):
+#         return self.n_rows * self.n_cols > 1500
 
 
 # Your Solution object will be instantiated and called as such:
