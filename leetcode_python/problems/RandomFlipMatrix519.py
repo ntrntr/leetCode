@@ -1,6 +1,6 @@
 import unittest
 
-
+import random
 class Solution(object):
 
     def __init__(self, n_rows, n_cols):
@@ -11,25 +11,43 @@ class Solution(object):
         self.n_rows = n_rows
         self.n_cols = n_cols
         self.data = []
-        for i in range(self.n_rows):
-            for j in range(self.n_cols):
-                self.data.append([i, j])
+        if not self.useNewStrategy():
+            self.index = [i for i in xrange(self.n_rows * self.n_cols)]
+            random.shuffle(self.index)
+        else:
+            self.index_contians = {}
         self.reset()
 
     def flip(self):
         """
         :rtype: List[int]
         """
-        return self.data[self.index.pop()]
+        if not self.useNewStrategy():
+            index = self.current_index
+            self.current_index = (self.current_index + 1) % (self.n_rows * self.n_cols)
+        else:
+            index = self.current_index
+            self.index_contians[index] = True
+            new_index = random.randint(0, self.n_rows * self.n_cols - 1)
+            while new_index in self.index_contians:
+                new_index = random.randint(0, self.n_rows * self.n_cols - 1)
+            self.current_index = new_index
+        return [index // self.n_cols, index % self.n_cols]
+
 
     def reset(self):
         """
         :rtype: None
         """
-        self.index = [i for i in range(self.n_rows * self.n_cols)]
+        if not self.useNewStrategy():
+            self.current_index = random.randint(0, self.n_rows * self.n_cols - 1)
+        else:
+            self.index_contians = {}
+            self.current_index = random.randint(0, self.n_rows * self.n_cols - 1)
 
-        import random
-        random.shuffle(self.index)
+
+    def useNewStrategy(self):
+        return self.n_rows * self.n_cols > 10000
 
 
 # Your Solution object will be instantiated and called as such:
@@ -44,11 +62,11 @@ class MyTestCase(unittest.TestCase):
         pass
 
     def test_something1(self):
-        cls = Solution(2,2)
+        cls = Solution(1, 2)
         print cls.flip()
         print cls.flip()
-        print cls.flip()
-        print cls.flip()
+        # print cls.flip()
+        # print cls.flip()
 
     def test_something2(self):
         pass
