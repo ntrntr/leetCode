@@ -1,6 +1,32 @@
 import unittest
 
 
+# class Solution(object):
+#     def checkSubarraySum(self, nums, k):
+#         """
+#         :type nums: List[int]
+#         :type k: int
+#         :rtype: bool
+#         """
+#         if len(nums) <= 1:
+#             return False
+#         right_sum = [0]
+#         current = 0
+#         for num in nums:
+#             current += num
+#             right_sum.append(current)
+#         num_len = len(nums)
+#         for i in xrange(1,num_len+1):
+#             for j in xrange(i+1, num_len+1):
+#                 if k == 0:
+#                     if (right_sum[j] - right_sum[i-1]) == 0:
+#                         return True
+#                 else:
+#                     if (right_sum[j] - right_sum[i-1]) % k == 0:
+#                         return True
+#         return False
+#
+
 class Solution(object):
     def checkSubarraySum(self, nums, k):
         """
@@ -8,24 +34,19 @@ class Solution(object):
         :type k: int
         :rtype: bool
         """
-        if len(nums) <= 1:
-            return False
-        right_sum = [0]
-        current = 0
-        for num in nums:
-            current += num
-            right_sum.append(current)
-        num_len = len(nums)
-        for i in xrange(1,num_len+1):
-            for j in xrange(i+1, num_len+1):
-                if k == 0:
-                    if (right_sum[j] - right_sum[i-1]) == 0:
-                        return True
-                else:
-                    if (right_sum[j] - right_sum[i-1]) % k == 0:
-                        return True
+        my_dict = {0:-1}
+        running_sum = 0
+        for i in xrange(len(nums)):
+            running_sum += nums[i]
+            if k != 0:
+                running_sum = running_sum % k
+            prev = my_dict.get(running_sum, None)
+            if prev is not None:
+                if i - prev > 1:
+                    return True
+            else:
+                my_dict[running_sum] = i
         return False
-
 
 class MyTestCase(unittest.TestCase):
 
