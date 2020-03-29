@@ -7,33 +7,20 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        result_list = []
-        zero_count = 0
-        one_count = 0
-        result_list.append((zero_count, one_count))
-        for index,num in enumerate(nums):
+        ret_dict = {0:0}
+        count = 0
+        ret = 0
+        for index, num in enumerate(nums, 1):
             if num == 1:
-                one_count += 1
+                count += 1
             else:
-                zero_count += 1
-            result_list.append((one_count, zero_count))
-        if zero_count == one_count:
-            return zero_count * 2
-        elif zero_count < one_count:
-            return self.getMaxLength(result_list, zero_count * 2)
-        else:
-            return self.getMaxLength(result_list, one_count * 2)
+                count -= 1
+            if count in ret_dict:
+                ret = max(ret, index - ret_dict[count])
+            else:
+                ret_dict[count] = index
+        return ret
 
-    def getMaxLength(self, result_list, upper_bound):
-        current_reuslt = 0
-        list_len = len(result_list) - 1
-        for i in xrange(list_len):
-            for j in xrange(current_reuslt + 2, upper_bound + 1, 2):
-                if i + j >= list_len + 1:
-                    break
-                if result_list[i + j][0] - result_list[i][0] == result_list[i + j][1] - result_list[i][1]:
-                    current_reuslt = max(current_reuslt, j)
-        return current_reuslt
 
 
 class MyTestCase(unittest.TestCase):
