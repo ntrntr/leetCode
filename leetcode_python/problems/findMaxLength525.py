@@ -7,27 +7,34 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        zero_count = []
-        one_count = []
+        result_list = []
+        zero_count = 0
+        one_count = 0
+        result_list.append((zero_count, one_count))
         for index,num in enumerate(nums):
             if num == 1:
-                one_count.append(index)
+                one_count += 1
             else:
-                zero_count.append(index)
-        if len(zero_count) == len(one_count):
-            return len(zero_count) * 2
-        elif len(zero_count) < len(one_count):
-            return self.getMaxLength(0, len(zero_count) - 1,zero_count, len(zero_count) * 2)
+                zero_count += 1
+            result_list.append((one_count, zero_count))
+        if zero_count == one_count:
+            return zero_count * 2
+        elif zero_count < one_count:
+            return self.getMaxLength(result_list, zero_count * 2)
         else:
-            return self.getMaxLength(0, len(one_count) - 1, one_count, len(one_count) * 2)
+            return self.getMaxLength(result_list, one_count * 2)
 
-    def getMaxLength(self, left_index, right_index, count_index, upper_len):
-        if left_index > right_index:
-            return 0
-        if (count_index[right_index] - count_index[left_index] + 1)<= upper_len:
-            return (right_index - left_index + 1) * 2
-        else:
-            return max(self.getMaxLength(left_index + 1, right_index, count_index, upper_len), self.getMaxLength(left_index, right_index-1, count_index, upper_len))
+    def getMaxLength(self, result_list, upper_bound):
+        current_reuslt = 0
+        list_len = len(result_list) - 1
+        for i in xrange(list_len):
+            for j in xrange(current_reuslt + 2, upper_bound + 1, 2):
+                if i + j >= list_len + 1:
+                    break
+                if result_list[i + j][0] - result_list[i][0] == result_list[i + j][1] - result_list[i][1]:
+                    current_reuslt = max(current_reuslt, j)
+        return current_reuslt
+
 
 class MyTestCase(unittest.TestCase):
 
@@ -43,8 +50,10 @@ class MyTestCase(unittest.TestCase):
         # self.assertEqual(ret, 2)
         # ret = solution.findMaxLength([0,1,0])
         # self.assertEqual(ret, 2)
-        ret = solution.findMaxLength([0,0,1,0,0,0,1,1])
-        self.assertEqual(ret, 6)
+        # ret = solution.findMaxLength([0,0,1,0,0,0,1,1])
+        # self.assertEqual(ret, 6)
+        ret = solution.findMaxLength([1,1,1,1,1,1,1,0,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,1,1,0,0,0,0,1,0,0,1,1,1,1,1,0,0,1,0,1,1,0,0,0,1,0,0,0,1,1,1,0,1,1,0,1,0,0,1,1,0,1,0,0,1,1,1,0,0,1,0,1,1,1,0,0,1,0,1,1])
+        self.assertEqual(ret, 94)
 
     def test_something3(self):
         self.assertEqual(True, True)
