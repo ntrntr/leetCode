@@ -15,36 +15,48 @@ class Solution(object):
         state = [ [self.TYPE_NONE] * col for i in range(row)]
         for i in xrange(row):
             state[i][0] |= self.TYPE_P
+            self.flowValue(state, i, 0, col, row, self.TYPE_P, matrix)
             state[i][col-1] |= self.TYPE_A
+            self.flowValue(state, i, col-1, col, row, self.TYPE_A, matrix)
         for j in xrange(col):
             state[0][j] |= self.TYPE_P
+            self.flowValue(state, 0, j, col, row, self.TYPE_P, matrix)
             state[row-1][j] |= self.TYPE_A
-        for i in range(0, row):
-            for j in range(0, col):
-                if state[i][j] & self.TYPE_P:
-                    self.flowValue(state, i, j, col, row, self.TYPE_P)
-        for i in range(row-1, 0, -1):
-            for j in range(col-1, 0, -1):
-                if state[i][j] & self.TYPE_A:
-                    self.flowValue(state, i, j, col, row, self.TYPE_A)
-        return [(i, j) for j in range(col) for i in range(row) if state[i][j] == 3]
+            self.flowValue(state, row-1, j, col, row, self.TYPE_A, matrix)
+        # print "state", state
+        finnal_ret = []
+        for i in range(row):
+            for j in range(col):
+                if state[i][j] == 3:
+                    finnal_ret.append((i, j,))
+        return finnal_ret
 
-
-    def flowValue(self, state, i, j, col, row, type):
+    def flowValue(self, state, i, j, col, row, type, matrix):
         # left
-        if j - 1 >= 0 and state[i][j-1] <= state[i][j]:
-            state[i][j] |= type
+        if j - 1 >= 0 and matrix[i][j-1] >= matrix[i][j] and not (state[i][j-1] & type):
+            state[i][j-1] |= type
+            self.flowValue(state, i, j-1, col, row, type, matrix)
         # right
-        if j + 1 <= col - 1 and state[i][j+1] <= state[i][j]:
+        if j + 1 <= col - 1 and matrix[i][j+1] >= matrix[i][j] and not (state[i][j+1] & type):
             state[i][j+1] |= type
+            self.flowValue(state, i, j+1, col, row, type, matrix)
         # top
-        if i - 1 >= 0 and state[i - 1][j] <= state[i][j]:
+        if i - 1 >= 0 and matrix[i - 1][j] >= matrix[i][j] and not (state[i-1][j] & type):
             state[i - 1][j] |= type
+            self.flowValue(state, i-1, j, col, row, type, matrix)
         # down
-        if i + 1 <= row - 1 and state[i + 1][j] <= state[i][j]:
+        if i + 1 <= row - 1 and matrix[i + 1][j] >= matrix[i][j] and not (state[i+1][j] & type):
             state[i + 1][j] |= type
+            self.flowValue(state, i+1, j, col, row, type, matrix)
 
 
+  # Pacific ~   ~   ~   ~   ~
+  #      ~  1   2   2   3  (5) *
+  #      ~  3   2   3  (4) (4) *
+  #      ~  2   4  (5)  3   1  *
+  #      ~ (6) (7)  1   4   5  *
+  #      ~ (5)  1   1   2   4  *
+  #         *   *   *   *   * Atlantic
 
 
 class MyTestCase(unittest.TestCase):
@@ -53,7 +65,13 @@ class MyTestCase(unittest.TestCase):
         self.solution = Solution()
 
     def test_something1(self):
-        pass
+        solution = Solution()
+        ret = solution.pacificAtlantic([[1,2,2,3,5],\
+                                  [3,2,3,4,4],\
+                                  [2,4,5,3,1],\
+                                  [6,7,1,4,5],\
+                                  [5,1,1,2,4]])
+        print ret
 
     def test_something2(self):
         pass
