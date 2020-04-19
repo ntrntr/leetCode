@@ -10,6 +10,8 @@ class Solution(object):
         :type matrix: List[List[int]]
         :rtype: List[List[int]]
         """
+        if not matrix:
+            return []
         row = len(matrix)
         col = len(matrix[0])
         state = [ [self.TYPE_NONE] * col for i in range(row)]
