@@ -16,7 +16,7 @@ class Solution(object):
         if len(s) < 6:
             ret |= self.LESS_PASSWORD
         if len(s) > 20:
-            ret |=  self.TOO_LONG_PASSWORD
+            ret |= self.TOO_LONG_PASSWORD
         contains_lower = False
         contains_upper = False
         contains_digit = False
@@ -55,8 +55,20 @@ class Solution(object):
             return self.subString(s)
 
     def subString(self, s):
-        for i in range(len(s)):
-            pass
+        min_del = len(s) - 20
+        ret = 0
+        while min_del > 0:
+            min_del -= 1
+            for i in range(len(s)):
+                after = s[0:i] + s[i + 1:len(s)]
+                judge_value = self.checkPassWorldValid(after)
+                if judge_value == self.VALID_PASSWORD:
+                    ret += 1
+                elif judge_value == self.TOO_LONG_PASSWORD:
+                    ret += 1
+                    s = after
+
+
 
 
 
