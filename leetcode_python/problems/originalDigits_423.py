@@ -7,27 +7,36 @@ class Solution(object):
         :type s: str
         :rtype: str
         """
-        digits_num = [ "one", "two", "three", "four", "five", "six", "seven", "nine"]
-        # digits_order = [('g', "eight", 8), ('u', )]
         digit_count = {}
-        for i in range(ord('a'), ord('z')+1):
-            digit_count[chr(i)] = 0
 
-        tmp = copy.deepcopy(digit_count)
-        for num in digits_num:
-            for c in num:
-                tmp[c] += 1
+        for ss in s:
+            digit_count[ss] = 1 + digit_count.get(ss, 0)
 
-        for k,v in tmp.iteritems():
+        find_list = [
+            ('z', 'zero', 0),
+            ('x', 'six', 6),
+            ('w', 'two', 2),
+            ('u', 'four', 4),
+            ('g', 'eight', 8),
+            ('t', 'three', 3),
+            ('s', 'seven', 7),
+            ('o', 'one', 1),
+            ('v', 'five', 5),
+            ('i', 'nine', 9),
+        ]
+
+        ret = [0] * 10
+        for c, d, v in find_list:
+            dcount = digit_count.get(c, 0)
+            if dcount > 0:
+                ret[v] = dcount
+                for dd in d:
+                    digit_count[dd] -= dcount
+        r = ""
+        for index, v in enumerate(ret):
             if v:
-                print "key:%s, value:%s" % (k, v)
-
-        for i in range(ord('a'), ord('z')+1):
-            digit_count[chr(i)] = 0
-        # ord char to int, chr int to char
-        for c in s:
-            digit_count[c] += 1
-        return ""
+                r += str(index) * v
+        return r
 
 
 
@@ -37,7 +46,7 @@ class MyTestCase(unittest.TestCase):
         self.solution = Solution()
 
     def test_something1(self):
-        self.assertEqual(self.solution.originalDigits("one"), "")
+        self.assertEqual(self.solution.originalDigits("one"), "1")
 
     def test_something2(self):
         pass
