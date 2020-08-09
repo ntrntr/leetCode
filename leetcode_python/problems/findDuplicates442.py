@@ -7,10 +7,13 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[int]
         """
-        my_dct = {}
-        for num in nums:
-            my_dct[num] = my_dct.get(num, 0) + 1
-        return [k for k,v in my_dct.items() if v == 2]
+        res = []
+        for x in nums:
+            if nums[abs(x)-1] < 0:
+                res.append(abs(x))
+            else:
+                nums[abs(x)-1] *= -1
+        return res
 
 
 
@@ -21,6 +24,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_something1(self):
         solution = Solution()
+        ret = [4,3,2,7,8,2,3,1]
+        self.assertEqual([2,3], solution.findDuplicates(ret))
 
     def test_something2(self):
         solution = Solution()
