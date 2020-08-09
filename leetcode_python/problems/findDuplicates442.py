@@ -8,13 +8,14 @@ class Solution(object):
         :rtype: List[int]
         """
         res = []
-        for x in nums:
-            if nums[abs(x)-1] < 0:
-                res.append(abs(x))
-            else:
-                nums[abs(x)-1] *= -1
+        lens = len(nums)
+        for i in xrange(lens):
+            val = nums[i]
+            nums[val % lens] = nums[val % lens] + lens
+        for i in xrange(lens):
+            if nums[i] >= 2 * lens:
+                res.append(i)
         return res
-
 
 
 class MyTestCase(unittest.TestCase):
