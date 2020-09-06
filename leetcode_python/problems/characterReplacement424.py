@@ -11,23 +11,21 @@ class Solution(object):
         s_len = len(s)
         if s_len <= k + 1:
             return s_len
-        ret = 1
-        test = {}
-        cache = [{}, ]
-        for index, c in enumerate(s):
-            test[c] = 1 + test.get(c, 0)
-            cache.append(copy.deepcopy(test))
-            while True:
-                next_expect_len = ret + 1
-                next_index = index + 1 - next_expect_len
-                if next_index >= 0:
-                    if self.checkValid(cache[next_index], cache[index+1], k):
-                        ret = next_expect_len
-                    else:
-                        cache[next_index] = {}
-                        break
-                else:
-                    break
+        unique_count = 0
+        ret = 0
+        start = 0
+        count_array = [0] * 26
+        for index, ch in enumerate(s):
+            val = ord(ch) - ord('A')
+            count_array[val] += 1
+            unique_count = max(unique_count, count_array[val])
+            if index - start + 1 - unique_count <= k:
+                ret = max(ret, index - start + 1)
+            else:
+                char_val = ord(s[start]) - ord('A')
+                count_array[char_val] -= 1
+                start += 1
+
         return ret
 
     def checkValid(self, start_dict, end_dict, kk):
