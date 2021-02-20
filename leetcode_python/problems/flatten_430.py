@@ -35,12 +35,17 @@ class Solution(object):
             return helper
         item = head
         while item:
-            new_node = Node(item.val, helper, None, None)
+            tmp_next = item.next
+            new_node = item
             helper.next = new_node
-            if item.child:
-                new_node = self._faltten(item.child, new_node)
+            new_node.prev = helper
+            new_node.next = None
+            tmp_child = new_node.child
+            new_node.child = None
+            if tmp_child:
+                new_node = self._faltten(tmp_child, new_node)
             helper = new_node
-            item = item.next
+            item = tmp_next
         return helper
 
 
