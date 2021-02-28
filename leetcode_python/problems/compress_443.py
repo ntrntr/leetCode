@@ -14,32 +14,29 @@ class Solution(object):
         current = chars[0]
         count = 1
         index = 1
-        tmp = []
+        modify_index = 0
         while index < chars_len:
             if chars[index] == current:
                 count = count + 1
-            else:
-                # judge
+            elif chars[index] != current:
                 ret = ret + 1 + (len(str(count)) if count > 1 else 0)
-                tmp.append(current)
+                chars[modify_index] = current
+                modify_index = modify_index + 1
                 if count > 1:
                     for c in str(count):
-                        tmp.append(c)
-                # print "add ret", ret, 1 + count if count > 1 else 0, count
+                        chars[modify_index] = c
+                        modify_index = modify_index + 1
                 current = chars[index]
                 count = 1
             index = index + 1
         ret = ret + 1 + (len(str(count)) if count > 1 else 0)
-        tmp.append(current)
+        chars[modify_index] = current
+        modify_index = modify_index + 1
         if count > 1:
             for c in str(count):
-                tmp.append(c)
-        for ind, c in enumerate(tmp):
-            chars[ind] = c
-        # print ret, chars, len(str(count))
+                chars[modify_index] = c
+                modify_index = modify_index + 1
         return ret
-
-
 
 
 class MyTestCase(unittest.TestCase):
@@ -53,11 +50,13 @@ class MyTestCase(unittest.TestCase):
     def test_something1(self):
 
         self.solution = Solution()
-        cc = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
-        self.assertEqual(self.solution.compress(cc), 4)
+        # cc = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+        # self.assertEqual(self.solution.compress(cc), 4)
 
     def test_something2(self):
-        pass
+        self.solution = Solution()
+        cc = ["a", "b", "c"]
+        self.assertEqual(self.solution.compress(cc), 3)
 
     def test_something3(self):
         self.assertEqual(True, True)
