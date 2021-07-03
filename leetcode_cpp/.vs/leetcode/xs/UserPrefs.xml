@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="leetcode/island-perimeter463.cpp">
+    <Files>
+      <File FileName="leetcode/island-perimeter463.cpp" Line="8" Column="9" />
+      <File FileName="leetcode/stdafx.h" Line="1" Column="1" />
+      <File FileName="leetcode/targetver.h" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|Win32" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
