@@ -7,36 +7,20 @@ public:
     int minPathSum(vector<vector<int>>& grid) {
         auto row_count = grid.size();
         auto col_count = grid[0].size();
-        vector<int> row(col_count, 0);
-        vector<int> col(col_count, 0);
-        row[0] = grid[0][0];
-        col[0] = grid[0][0];
-        for(int i = 1; i < col_count; i++)
-        {
-            row[i] = grid[0][i] + row[i-1];
-        }
+        vector<int> pre(row_count, grid[0][0]);
         for(int i = 1; i < row_count; i++)
         {
-            col[i] = grid[i][0]+ col[i-1];
+            pre[i] = pre[i-1] + grid[i][0];
         }
-        for(auto i = 1; i < row_count; i++)
+        for(auto j = 1; j < col_count; j++)
         {
-            for(auto j = 1; j < col_count; j++)
+            pre[0] = pre[0] + grid[0][j];
+            for(auto i = 1; i < row_count; i++)
             {
-                row[j] = min(col[i], row[j-1]) + grid[i][j];
-                col[i] = min(col[i-1], row[j]) + grid[i][j];
-                // cout << "i:"<<i<<"\tj:"<<j<<"\t update val:" << tmp_data[i][j] << endl;
+                pre[i] = min(pre[i-1], pre[i]) + grid[i][j];
             }
         }
-        // for(auto& c:tmp_data)
-        // {
-        //     for(auto j:c)
-        //     {
-        //         cout << j <<',';
-        //     }
-        //     cout << endl;
-        // }
-        return row[col_count-1];
+        return pre[row_count-1];
     }
 };
 
