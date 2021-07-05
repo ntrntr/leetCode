@@ -18,40 +18,57 @@ struct ListNode {
 class Solution {
 public:
 	ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-		auto helper = ListNode(0);
+		auto helper = l1;
 		auto jinwei = 0;
-		auto* cur = &helper;
+		auto cur = l1;
+		ListNode* before = nullptr;
 		while (l1 && l2)
 		{
 			auto val = (l1->val + l2->val + jinwei) % 10;
 			jinwei = (l1->val + l2->val + jinwei) / 10;
-			cur->next = new ListNode(val);
+			cur->val = val;
+			before = cur;
 			cur = cur->next;
 			l1 = l1->next;
 			l2 = l2->next;
 		}
-		ListNode* left = nullptr;
-		if (l1)
+		if (l1 != nullptr)
 		{
-			left = l1;
+			
 		}
 		else
 		{
-			left = l2;
+			before->next = l2;
+			cur = l2;
 		}
-		while (left)
+		if (jinwei && cur == nullptr)
 		{
-			auto val = (left->val + jinwei) % 10;
-			jinwei = (left->val + jinwei) / 10;
-			cur->next = new ListNode(val);
-			cur = cur->next;
-			left = left->next;
+			before->next = new ListNode(0);
+			cur = before->next;
 		}
-		if (jinwei > 0)
+		while (cur)
 		{
-			cur->next = new ListNode(jinwei);
+			auto val = (cur->val + jinwei) % 10;
+			jinwei = (cur->val + jinwei) / 10;
+			cur->val = val;
+			if(jinwei)
+			{
+				if(cur->next != nullptr)
+				{
+					cur = cur->next;
+				}
+				else
+				{
+					cur->next = new ListNode(0);
+					cur = cur->next;
+				}
+			}
+			else
+			{
+				break;
+			}
 		}
-		return helper.next;
+		return helper;
 	}
 };
 
