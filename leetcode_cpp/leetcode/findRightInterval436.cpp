@@ -1,5 +1,6 @@
 #include <vector>
 #include<algorithm>
+#include<map>
 using namespace std;
 
 class sort_data
@@ -13,7 +14,7 @@ public:
     int orgion_index;
 };
 
-class Solution {
+class Solution1 {
 public:
     vector<int> findRightInterval(vector<vector<int>>& intervals) {
         vector<int> ret;
@@ -45,6 +46,32 @@ public:
             }
         }
         return ret;
+    }
+};
+
+class Solution {
+public:
+    vector<int> findRightInterval(vector<vector<int>>& intervals) {
+        map<int, int> hash;
+        auto ilen = intervals.size();
+        for(auto i=0; i < ilen; ++i)
+        {
+            hash[intervals[i][0]] = i;
+        }
+        vector<int> res;
+        for(auto i=0; i < ilen; ++i)
+        {
+            auto it = hash.lower_bound(intervals[i][1]);
+            if(it == hash.end())
+            {
+                res.push_back(-1);
+            }
+            else
+            {
+                res.push_back(it->second);
+            }
+        }
+        return res;
     }
 };
 
