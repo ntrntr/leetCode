@@ -19,7 +19,7 @@ public:
 		}
 		for(int i = 0; i < n - 1; ++i)
 		{
-			auto it= myHash.find(target - nums[i]);
+			auto it = myHash.find(target - nums[i]);
 			int tmp;
 			if(it != myHash.end() && (tmp = it->second) != i + 1)
 			{
