@@ -1,4 +1,4 @@
-class Solution {
+class Solution1 {
 public:
     int findUnsortedSubarray(vector<int>& nums) {
         auto copy_nums = vector<int>(nums);
@@ -26,5 +26,30 @@ public:
             }
         }
         return end - before + 1;
+    }
+};
+
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        auto end = -2;
+        auto begin = -1;
+        auto max_value = nums[0];
+        auto size_len = nums.size();
+        auto min_value = nums[size_len - 1];
+        for(int i = 0; i < size_len; ++i)
+        {
+            max_value = max(max_value, nums[i]);
+            min_value = min(min_value, nums[size_len - i - 1]);
+            if (nums[i] < max_value)
+            {
+                end = i;
+            }
+            if (nums[size_len - i -1] > min_value)
+            {
+                begin = size_len - i -1;
+            }
+        }
+        return end - begin + 1;
     }
 };
