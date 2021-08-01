@@ -12,6 +12,15 @@ public:
         return nums[nums.size()-k-1];
     }
 
+    void print_vector(vector<int>& nums)
+    {
+        for(auto it = nums.begin(); it != nums.end(); ++it)
+        {
+            cout << *it << ",";
+        }
+        cout << endl;
+    }
+
     void nth_element2(vector<int>& nums, int begin, int end,int k)
     {
         auto _begin = begin;
@@ -19,6 +28,8 @@ public:
         auto povit = nums[begin];
         while(begin < end)
         {
+            cout << "init:" << povit << endl;
+            print_vector(nums);
             while (begin < end)
             {
                 if (nums[end] > povit)
@@ -34,6 +45,8 @@ public:
                     continue;
                 }
             }
+            cout << "last sort\tbegin:" << begin << ",end:"<< end<<endl;
+            print_vector(nums);
             while (begin < end)
             {
                 if (nums[begin] <= povit)
@@ -49,6 +62,8 @@ public:
                     continue;
                 }
             }
+            cout << "before sort\tbegin:" << begin << ",end:"<< end<<endl;
+            print_vector(nums);
             
         }
         nums[begin] = povit;
