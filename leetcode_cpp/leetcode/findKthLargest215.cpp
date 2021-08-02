@@ -8,12 +8,13 @@ public:
         // nth_element(nums.begin(), nums.begin() + k -1, nums.end(), [](int left, int right){
         //     return left>right;
         // });
-        nth_element2(nums, 0, nums.size()-1, nums.size() - k-1);
-        return nums[nums.size()-k-1];
+        nth_element2(nums, 0, nums.size()-1, k-1);
+        return nums[k-1];
     }
 
     void print_vector(vector<int>& nums)
     {
+		return;
         for(auto it = nums.begin(); it != nums.end(); ++it)
         {
             cout << *it << ",";
@@ -36,7 +37,7 @@ public:
                 {
                     nums[begin] = nums[end];
                     begin++;
-                    end--;
+                    end;
                     break;
                 }
                 else
@@ -53,7 +54,6 @@ public:
                 {
                     nums[end] = nums[begin];
                     end--;
-                    begin++;
                     break;
                 }
                 else
