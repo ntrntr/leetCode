@@ -35,7 +35,60 @@ void test_lambda()
     f2();
     cout << aab << endl;
 
-    tuple<int&, const char(&)[3], int&> tp = std::tie(1, "aa", 2);
+    // tuple<int&, const char(&)[3], int&> tp = std::tie(1, "aa", 2);
+}
+
+int g_construct = 0;
+int g_copy = 0;
+int g_assign = 0;
+
+class TestA
+{
+public:
+    TestA()
+    {
+        cout << "construct:" << ++g_construct << endl;
+    }
+
+    ~TestA()
+    {
+        cout << "deconstruct:" << endl;
+    }
+
+    TestA(const TestA& Other)
+    {
+        cout << "g_copy:" << ++g_copy << endl;
+
+
+    }
+
+    TestA(TestA&& Other) noexcept
+    {
+        cout << "g_copy RValueRefrence:" << ++g_copy << endl;
+    }
+
+    TestA& operator=(const TestA& Other)
+    {
+        if (this == &Other)
+            return *this;
+        cout << "g_assign:" << ++g_assign << endl;
+        return *this;
+    }
+
+    TestA& operator=(TestA&& Other) noexcept
+    {
+        if (this == &Other)
+            return *this;
+        cout << "g_assign RValueRefrence:" << ++g_assign << endl;
+
+        return *this;
+    }
+};
+
+void test_r_value_reference()
+{
+    TestA a = TestA();
+    
 }
 
 int main(void)
@@ -43,5 +96,6 @@ int main(void)
     cout << "hello world" << endl;
     function_test();
     test_lambda();
+    test_r_value_reference();
     return 0;
 }
