@@ -159,5 +159,11 @@ int main(void)
     
     // class Foo {};
     cout << typeid(Foo*[10]).name() << endl;
+    cout << alignof(std::max_align_t) << endl;
+    char buffer[] = "------------------------";
+    void* pt = buffer;
+    cout << sizeof(buffer) << ", " << alignof(int) << "," << sizeof(char) << endl;
+    auto space = sizeof(buffer) - 1;
+    std::align(alignof(int), sizeof(char), pt, space);
     return 0;
 }
