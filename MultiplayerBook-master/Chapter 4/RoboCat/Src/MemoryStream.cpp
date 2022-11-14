@@ -1,5 +1,11 @@
 #include <RoboCatPCH.h>
 
+void OutputMemoryStream::MallocBuffer(uint32_t inNewLength)
+{
+	mBuffer = static_cast<char*>(std::malloc(inNewLength));
+	mCapacity = inNewLength;
+}
+
 void OutputMemoryStream::ReallocBuffer( uint32_t inNewLength )
 {
 	mBuffer = static_cast< char* >( std::realloc( mBuffer, inNewLength ) );

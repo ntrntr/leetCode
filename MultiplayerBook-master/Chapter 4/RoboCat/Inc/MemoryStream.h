@@ -12,8 +12,12 @@ class OutputMemoryStream
 {
 public:
 	OutputMemoryStream() :
-	mLinkingContext( nullptr )
-	{ ReallocBuffer( 32 ); }
+		mLinkingContext(nullptr)
+	{
+		mBuffer = nullptr;
+		ReallocBuffer(32);
+		// MallocBuffer(32);
+	}
 	
 	~OutputMemoryStream()	{ std::free( mBuffer ); }
 	
@@ -75,6 +79,7 @@ public:
 	
 	
 private:
+	void MallocBuffer( uint32_t inNewLength );
 			void		ReallocBuffer( uint32_t inNewLength );
 	
 	char*		mBuffer;
