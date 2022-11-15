@@ -76,6 +76,8 @@ public:
 		uint32_t networkId = mLinkingContext->GetNetworkId( const_cast< GameObject* >( inGameObject ), false );
 		Write( networkId );
 	}
+
+	void Write(const std::unordered_map<int, int>& inMap);
 	
 	
 private:
@@ -130,6 +132,8 @@ public:
 		Read( networkId );
 		outGameObject = mLinkingContext->GetGameObject( networkId );
 	}
+
+	void Read(std::unordered_map<int, int>& inMap);
 	
 private:
 	char*		mBuffer;
