@@ -7,7 +7,21 @@ void function_test()
 {
 	std::cout << "hello world" << std::endl;
 	OutputMemoryStream Stream;
-	Stream.Write(std::string("abc"));
+	std::unordered_map<int, int> map{
+		{1,1},
+		{2,1},
+		{3,1},
+		{4,3},
+	};
+	Stream.Write(map);
+	uint32_t len = Stream.GetLength();
+	char* data = static_cast<char*>(std::malloc(len));
+	std::memcpy(data, Stream.GetBufferPtr(), len);
+	
+	InputMemoryStream InputMemoryStream(data, len);
+	std::unordered_map<int, int> newMap;
+	InputMemoryStream.Read(newMap);
+	std::cout << newMap.size() << std::endl;
 }
 
 int main(void)

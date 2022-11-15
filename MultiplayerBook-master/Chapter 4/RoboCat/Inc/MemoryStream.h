@@ -84,11 +84,11 @@ private:
 	void MallocBuffer( uint32_t inNewLength );
 			void		ReallocBuffer( uint32_t inNewLength );
 	
-	char*		mBuffer;
-	uint32_t	mHead;
-	uint32_t	mCapacity;
+	char*		mBuffer = nullptr;
+	uint32_t	mHead = 0;
+	uint32_t	mCapacity = 0;
 	
-	LinkingContext* mLinkingContext;
+	LinkingContext* mLinkingContext = nullptr;
 };
 
 class InputMemoryStream
@@ -136,10 +136,10 @@ public:
 	void Read(std::unordered_map<int, int>& inMap);
 	
 private:
-	char*		mBuffer;
-	uint32_t	mHead;
-	uint32_t	mCapacity;
+	char*		mBuffer = nullptr;
+	uint32_t	mHead = 0;
+	uint32_t	mCapacity = 0;
 
-	LinkingContext* mLinkingContext;
+	LinkingContext* mLinkingContext = nullptr;
 };
 
