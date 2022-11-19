@@ -1,15 +1,16 @@
 #include <RoboCatPCH.h>
+// template<int, int>
+// void OutputMemoryStream::Write(const std::unordered_map<int, int>& inMap)
+// {
+// 	const size_t elementCount = inMap.size();
+// 	Write( elementCount );
+// 	for(auto& KV : inMap)
+// 	{
+// 		Write(KV.first);
+// 		Write(KV.second);
+// 	}
+// }
 
-void OutputMemoryStream::Write(const std::unordered_map<int, int>& inMap)
-{
-	const size_t elementCount = inMap.size();
-	Write( elementCount );
-	for(auto& KV : inMap)
-	{
-		Write(KV.first);
-		Write(KV.second);
-	}
-}
 
 void OutputMemoryStream::MallocBuffer(uint32_t inNewLength)
 {
@@ -57,17 +58,17 @@ void InputMemoryStream::Read( void* outData,
 	
 	mHead = resultHead;
 }
-
-void InputMemoryStream::Read(std::unordered_map<int, int>& inMap)
-{
-	size_t elementCount;
-	Read( elementCount );
-	int key;
-	int value;
-	for(int i = 0; i < elementCount; ++i)
-	{
-		Read( key );
-		Read( value );
-		inMap[key] = value;
-	}
-}
+// template<int, int>
+// void InputMemoryStream::Read(std::unordered_map<int, int>& inMap)
+// {
+// 	size_t elementCount;
+// 	Read( elementCount );
+// 	int key;
+// 	int value;
+// 	for(int i = 0; i < elementCount; ++i)
+// 	{
+// 		Read( key );
+// 		Read( value );
+// 		inMap[key] = value;
+// 	}
+// }

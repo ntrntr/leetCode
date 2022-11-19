@@ -8,6 +8,12 @@
 class GameObject;
 class LinkingContext;
 
+// template<bool T>
+// class MemoryStream
+// {
+// 	
+// };
+
 class OutputMemoryStream
 {
 public:
@@ -77,7 +83,21 @@ public:
 		Write( networkId );
 	}
 
-	void Write(const std::unordered_map<int, int>& inMap);
+	// template<int, int>
+	// void Write(const std::unordered_map<int, int>& inMap);
+
+	template<typename Key, typename Value>
+	void Write(const std::unordered_map<Key, Value>& inMap)
+	{
+		const size_t elementCount = inMap.size();
+		Write( elementCount );
+		for(auto& KV : inMap)
+		{
+			Write<Key>(KV.first);
+			Write<Value>(KV.second);
+		}
+	}
+
 	
 	
 private:
@@ -133,7 +153,24 @@ public:
 		outGameObject = mLinkingContext->GetGameObject( networkId );
 	}
 
-	void Read(std::unordered_map<int, int>& inMap);
+	// template<int, int>
+	// void Read(std::unordered_map<int, int>& inMap);
+
+	template<typename Key, typename Value>
+	void Read(std::unordered_map<Key, Value>& inMap)
+	{
+		size_t elementCount;
+		Read( elementCount );
+		Key key;
+		Value value;
+		for(int i = 0; i < elementCount; ++i)
+		{
+			Read<Key>( key );
+			Read<Value>( value );
+			inMap[key] = value;
+		}
+	}
+
 	
 private:
 	char*		mBuffer = nullptr;

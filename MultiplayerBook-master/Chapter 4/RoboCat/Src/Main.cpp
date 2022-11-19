@@ -13,14 +13,14 @@ void function_test()
 		{3,1},
 		{4,3},
 	};
-	Stream.Write(map);
-	uint32_t len = Stream.GetLength();
-	char* data = static_cast<char*>(std::malloc(len));
-	std::memcpy(data, Stream.GetBufferPtr(), len);
+	Stream.Write<int, int>(map);
+	 uint32_t len = Stream.GetLength();
+	 char* data = static_cast<char*>(std::malloc(len));
+	 std::memcpy(data, Stream.GetBufferPtr(), len);
 	
-	InputMemoryStream InputMemoryStream(data, len);
-	std::unordered_map<int, int> newMap;
-	InputMemoryStream.Read(newMap);
+	 InputMemoryStream InputMemoryStream(data, len);
+	 std::unordered_map<int, int> newMap;
+	 InputMemoryStream.Read<int, int>(newMap);
 	std::cout << newMap.size() << std::endl;
 }
 
